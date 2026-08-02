@@ -9,7 +9,7 @@ Dieser Skill richtet eine neue Projektkopie sauber ein.
 
 ## Ablauf
 
-1. Lies zuerst `codex.md`, `VORLAGE/REGELN/GRUNDREGELN.md` und
+1. Lies zuerst `AGENTS.md`, `VORLAGE/REGELN/GRUNDREGELN.md` und
    `VORLAGE/AI/PROJEKTREGELN/PROJEKTREGELN.md`.
 2. Prüfe, ob `OPENROUTER/` separat bleiben soll. Standard: ja.
 3. Fülle den konkreten Arbeitskontext in

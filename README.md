@@ -459,7 +459,7 @@ Diese Vorlage enthält GitHub-Dateien für öffentliche Nutzung:
 Wiki:
 
 ```text
-https://github.com/MichaelGahnDESIGN/AI-Basic-Projektordner/wiki
+https://github.com/MichaelGahnDESIGN/MGD_AI-Basic-Projektordner_TOOL/wiki
 ```
 
 Versionierte Wiki-Quellen:
@@ -479,24 +479,24 @@ Aktuelle Version:
 Der AI Basic Projektordner gehört zu einer kleinen Werkzeugfamilie für
 KI-gestützte Projektarbeit.
 
-- [AI Project Updater Skill](https://github.com/MichaelGahnDESIGN/AI-Project-Updater-Skill)  
+- [AI Project Updater Skill](https://github.com/MichaelGahnDESIGN/MGD_AI-Project-Updater_SKILL)  
   Ein geführter Assistent für lokale Staging-Umgebungen, Docker-Planung,
   Update-Vorbereitung und sichere Staging-zu-Live-Abläufe. Das Repository ist
   während der Entwicklung zunächst privat.
 
-- [DEV-Skill](https://github.com/MichaelGahnDESIGN/DEV-Skill)  
+- [DEV-Skill](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL)  
   Ein projektneutraler Skill für Projekt-Sync, Tests, GitHub-Abgleich,
   Deploy-Vorbereitung, Backups und Abschlussberichte.
 
-- [ProjectClean-Skill](https://github.com/MichaelGahnDESIGN/ProjectClean-Skill)  
+- [ProjectClean-Skill](https://github.com/MichaelGahnDESIGN/MGD_ProjectClean_SKILL)  
   Ein Abschluss- und Aufräum-Skill für Versionen, Tests, Commits, Backups,
   Dokumentation und vorsichtiges Cleanup.
 
-- [AI-PlayTest-Skill](https://github.com/MichaelGahnDESIGN/AI-PlayTest-Skill)  
+- [AI-PlayTest-Skill](https://github.com/MichaelGahnDESIGN/MGD_AI-PlayTest_SKILL)  
   Ein Skill für Play-Tests aus Sicht echter Nutzerrollen, lokal, auf Staging
   oder vorsichtig auf Live.
 
-- [Claude-Codex-MCP](https://github.com/MichaelGahnDESIGN/Claude-Codex-MCP)  
+- [Claude-Codex-MCP](https://github.com/MichaelGahnDESIGN/MGD_Claude-Codex_MCP)  
   Ein lokales MCP-System für Aufgaben, Chat und Übergaben zwischen Claude,
   Codex und weiteren KI-Agenten.
 
@@ -516,7 +516,7 @@ Diese Daten dürfen **niemals** die lokale Maschine verlassen — weder nach Git
 - **Sensible Daten:** `.env*` (außer `.env.example`), Tokens, API-Keys, Passwörter, `*.pem`, `*.key`, Zugangsdaten — niemals committen/pushen/deployen.
 - **Push-Disziplin:** Nur den Hauptbranch (`main`) pushen, **niemals** `git push --all`/`--mirror`. `PlayTest*`-Branches werden nie gepusht.
 
-Alle genannten Muster gehören in `.gitignore`. Technische Absicherung: der Pre-Push-Hook aus dem [MGD-DEV-Skill](https://github.com/MichaelGahnDESIGN/MGD-DEV-Skill) (`dev/hooks/pre-push`) blockiert solche Pushes hart — empfohlen, am besten global via `git config --global core.hooksPath ~/.git-hooks`.
+Alle genannten Muster gehören in `.gitignore`. Technische Absicherung: der Pre-Push-Hook aus dem [MGD-DEV-Skill](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL) (`dev/hooks/pre-push`) blockiert solche Pushes hart — empfohlen, am besten global via `git config --global core.hooksPath ~/.git-hooks`.
 
 ---
 
@@ -524,14 +524,14 @@ Alle genannten Muster gehören in `.gitignore`. Technische Absicherung: der Pre-
 
 | Projekt | Beschreibung |
 |---------|-------------|
-| [MGD-App-Updater-Skill](https://github.com/MichaelGahnDESIGN/MGD-App-Updater-Skill) | Software-Update-Systeme planen und implementieren |
-| [MGD-Bugreport-Skill](https://github.com/MichaelGahnDESIGN/MGD-Bugreport-Skill) | Feedback-Hub: Bug-Meldung, Ideen und Support |
-| [MGD-ToDo-SKILL](https://github.com/MichaelGahnDESIGN/MGD-ToDo-SKILL) | Aufgabenmanagement direkt im Projekt-Repo |
-| [MGD-DEV-Skill](https://github.com/MichaelGahnDESIGN/MGD-DEV-Skill) | Release, Sync, Backup und Wissensdokumentation |
-| [MGD-ProjectClean-Skill](https://github.com/MichaelGahnDESIGN/MGD-ProjectClean-Skill) | Abschluss- und Aufräum-Workflow |
-| [MGD-AI-PlayTest-Skill](https://github.com/MichaelGahnDESIGN/MGD-AI-PlayTest-Skill) | Live-Playtest aus Nutzerperspektive |
-| [MGD-Backup-Skill](https://github.com/MichaelGahnDESIGN/MGD-Backup-Skill) | Automatisierte lokale und Cloud-Backups |
-| [MGD-AI-Project-Updater-Skill](https://github.com/MichaelGahnDESIGN/MGD-AI-Project-Updater-Skill) | Geführter Projekt-Assistent für Staging und Updates |
+| [MGD-App-Updater-Skill](https://github.com/MichaelGahnDESIGN/MGD_Software-Updater_SKILL) | Software-Update-Systeme planen und implementieren |
+| [MGD-Bugreport-Skill](https://github.com/MichaelGahnDESIGN/MGD_BugReport_SKILL) | Feedback-Hub: Bug-Meldung, Ideen und Support |
+| [MGD-ToDo-SKILL](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL) | Aufgabenmanagement direkt im Projekt-Repo |
+| [MGD-DEV-Skill](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL) | Release, Sync, Backup und Wissensdokumentation |
+| [MGD-ProjectClean-Skill](https://github.com/MichaelGahnDESIGN/MGD_ProjectClean_SKILL) | Abschluss- und Aufräum-Workflow |
+| [MGD-AI-PlayTest-Skill](https://github.com/MichaelGahnDESIGN/MGD_AI-PlayTest_SKILL) | Live-Playtest aus Nutzerperspektive |
+| [MGD-Backup-Skill](https://github.com/MichaelGahnDESIGN/MGD_Backup_SKILL) | Automatisierte lokale und Cloud-Backups |
+| [MGD-AI-Project-Updater-Skill](https://github.com/MichaelGahnDESIGN/MGD_AI-Project-Updater_SKILL) | Geführter Projekt-Assistent für Staging und Updates |
 
 → Alle öffentlichen Projekte: [github.com/MichaelGahnDESIGN](https://github.com/MichaelGahnDESIGN)
 
