@@ -4,6 +4,7 @@ Alle wichtigen Änderungen dieser öffentlichen Vorlage werden hier dokumentiert
 
 ## Unreleased
 
+- `VORLAGE/AI/TOOLING/zugang-ui/`: lokale Mini-Weboberfläche zum sicheren Einrichten von Server-Zugängen.
 - Skill `zugang` unter `.agents/skills/zugang/`: sicherer Ablauf für Zugangsdaten (Server, Shop, WordPress, Datenbank).
 - `.gitignore`: `.ssh/`, `*.local.md`, `.access.local.md`, `.env.access.local` ergänzt.
 

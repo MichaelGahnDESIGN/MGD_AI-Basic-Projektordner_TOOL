@@ -154,6 +154,16 @@ danach mit Code in PROJEKT/WORKSPACE/. Keine Secrets oder personenbezogenen
 Daten speichern oder ausgeben.
 ```
 
+## Zugänge sicher einrichten
+
+KI-Agenten können Server, Shop, WordPress oder Datenbank selbstständig testen und deployen, ohne dass Passwörter im Chat landen:
+Zugangs-`.md` ins Projekt legen, Agent schützt sie per `.gitignore`, erzeugt eine lokale env und einen eigenen SSH-Key,
+du trägst den öffentlichen Schlüssel beim Hoster ein, danach testet der Agent den Zugang selbst.
+
+- Skill: `/zugang` (`.agents/skills/zugang/SKILL.md`)
+- Oberfläche zum Klicken: `VORLAGE/AI/TOOLING/zugang-ui/start.command` (lokal, nur Python, kein Token verlässt den Rechner)
+- Anleitung: [DOKUMENTATION/Zugaenge-einrichten.md](DOKUMENTATION/Zugaenge-einrichten.md) · [Wiki](https://github.com/MichaelGahnDESIGN/MGD_AI-Basic-Projektordner_TOOL/wiki/Zugaenge-einrichten)
+
 ## Prompt-Cheatsheet Für Die Arbeit Mit Der Vorlage
 
 Diese Prompts helfen beim täglichen Arbeiten mit der Ordnerstruktur. Sie sind
