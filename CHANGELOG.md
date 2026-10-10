@@ -2,6 +2,11 @@
 
 Alle wichtigen Änderungen dieser öffentlichen Vorlage werden hier dokumentiert.
 
+## Unreleased
+
+- Skill `zugang` unter `.agents/skills/zugang/`: sicherer Ablauf für Zugangsdaten (Server, Shop, WordPress, Datenbank).
+- `.gitignore`: `.ssh/`, `*.local.md`, `.access.local.md`, `.env.access.local` ergänzt.
+
 ## 1.0.1 - Öffentliche GitHub-Vorlage
 
 Datum: 2026-06-07

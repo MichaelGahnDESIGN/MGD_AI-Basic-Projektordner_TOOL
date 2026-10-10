@@ -48,3 +48,8 @@ PlayTest/
 *.sql
 *.sql.gz
 *.dump
+
+.ssh/
+.access.local.md
+.env.access.local
+*.local.md
