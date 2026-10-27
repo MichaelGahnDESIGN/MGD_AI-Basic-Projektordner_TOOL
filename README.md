@@ -156,13 +156,17 @@ Daten speichern oder ausgeben.
 
 ## Zugänge sicher einrichten
 
-KI-Agenten können Server, Shop, WordPress oder Datenbank selbstständig testen und deployen, ohne dass Passwörter im Chat landen:
-Zugangs-`.md` ins Projekt legen, Agent schützt sie per `.gitignore`, erzeugt eine lokale env und einen eigenen SSH-Key,
-du trägst den öffentlichen Schlüssel beim Hoster ein, danach testet der Agent den Zugang selbst.
+Dein KI-Helfer soll sich auf einem Server, in einem Shop oder bei WordPress anmelden können, ohne dass dein Passwort im Chat oder auf GitHub landet? So geht's:
 
-- Skill: `/zugang` (`.agents/skills/zugang/SKILL.md`)
-- Oberfläche zum Klicken: `VORLAGE/AI/TOOLING/zugang-ui/start.command` (lokal, nur Python, kein Token verlässt den Rechner)
-- Anleitung: [DOKUMENTATION/Zugaenge-einrichten.md](DOKUMENTATION/Zugaenge-einrichten.md) · [Wiki](https://github.com/MichaelGahnDESIGN/MGD_AI-Basic-Projektordner_TOOL/wiki/Zugaenge-einrichten)
+1. Skill `zugang` installieren (einmalig, Befehl steht in der Anleitung).
+2. Deine Zugangsdaten in eine Textdatei schreiben, zum Beispiel `private/zugaenge.md`.
+3. In Claude Code eingeben: `/zugang private/zugaenge.md`. Der Helfer schützt die Datei, legt eine geheime `.env` an und testet den Login.
+
+Für Server mit SSH gibt es zusätzlich eine kleine Webseite, die nur auf deinem Rechner läuft: die [Zugang-UI](VORLAGE/AI/TOOLING/zugang-ui/README.md).
+
+- Ausführliche Anleitung, Schritt für Schritt: [DOKUMENTATION/Zugaenge-einrichten.md](DOKUMENTATION/Zugaenge-einrichten.md)
+- Skill: [.agents/skills/zugang/SKILL.md](.agents/skills/zugang/SKILL.md)
+- Wiki-Seite: [Zugaenge-einrichten](https://github.com/MichaelGahnDESIGN/MGD_AI-Basic-Projektordner_TOOL/wiki/Zugaenge-einrichten)
 
 ## Prompt-Cheatsheet Für Die Arbeit Mit Der Vorlage
 

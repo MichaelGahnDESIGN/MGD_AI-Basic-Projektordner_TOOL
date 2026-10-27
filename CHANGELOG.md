@@ -4,6 +4,8 @@ Alle wichtigen Änderungen dieser öffentlichen Vorlage werden hier dokumentiert
 
 ## Unreleased
 
+- Skill `zugang` auf die neue Version aus dem MGD-Plattform-Builder umgestellt (geschützte `.env`, Schreib-/Löschschutz, Login-Test).
+- Anleitung, README-Abschnitt und Zugang-UI-README in einfacher Sprache neu geschrieben.
 - `VORLAGE/AI/TOOLING/zugang-ui/`: lokale Mini-Weboberfläche zum sicheren Einrichten von Server-Zugängen.
 - Skill `zugang` unter `.agents/skills/zugang/`: sicherer Ablauf für Zugangsdaten (Server, Shop, WordPress, Datenbank).
 - `.gitignore`: `.ssh/`, `*.local.md`, `.access.local.md`, `.env.access.local` ergänzt.

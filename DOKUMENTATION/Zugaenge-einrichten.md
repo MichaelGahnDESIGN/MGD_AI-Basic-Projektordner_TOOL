@@ -1,88 +1,215 @@
-# Zugänge sicher einrichten
+# Zugänge sicher einrichten – ganz einfach erklärt
 
-Diese Anleitung zeigt, wie du einem KI-Agenten (Claude Code) **sicher** Zugang zu Server, Shop, WordPress oder Datenbank gibst,
-damit er selbstständig testen, analysieren und deployen kann – ohne dass du Passwörter in den Chat kopierst oder ständig Befehle tippst.
+## Worum geht es?
 
-## Das Prinzip
+Du willst, dass dein KI-Helfer (Claude Code oder Codex) sich auf einem Server, in einem Shop oder bei WordPress anmelden kann.
+Dein Passwort soll dabei **nicht im Chat** landen und **nicht auf GitHub**.
 
-1. Du legst eine **Zugangs-Datei (.md)** ins Projekt. Sie bleibt lokal und steht in der `.gitignore`.
-2. Der Agent erzeugt daraus eine **lokale env-Datei** (`.env.access.local`, Rechte `600`).
-3. Er erstellt einen **projekteigenen SSH-Schlüssel**. Du trägst nur den *öffentlichen* Teil beim Hoster ein.
-4. Der Agent **testet den Zugang selbst** und arbeitet danach per Schlüssel statt per Passwort.
+Stell dir dein Passwort wie einen Haustürschlüssel vor. Du gibst ihn nicht jedem in die Hand.
+Stattdessen legst du ihn in einen kleinen Tresor (eine geschützte Datei auf deinem Rechner). Nur dein Rechner darf ihn dort herausnehmen.
 
-## Drei Wege
+Dafür gibt es zwei Hilfsmittel. Du kannst eines oder beide nutzen:
 
-| Weg | Wann | Start |
+| Hilfsmittel | Wofür? | Pflicht? |
 |---|---|---|
-| **Skill `/zugang`** | Du arbeitest im Chat mit Claude Code | `/zugang` bzw. „ich gebe dir Zugangsdaten" |
-| **Zugang-UI** | Du willst klicken statt tippen | `VORLAGE/AI/TOOLING/zugang-ui/start.command` |
-| **Berechtigungsregeln** | Der Agent soll nicht dauernd nachfragen | siehe unten |
+| **Skill `/zugang`** | Übernimmt deine Zugangsdaten in eine geschützte Datei und testet den Login | ja, das ist der Hauptweg |
+| **Zugang-UI** | Kleine Webseite auf deinem Rechner, die einen SSH-Schlüssel für den Server erzeugt | nein, nur für Server mit SSH |
 
-Der Skill liegt unter `.agents/skills/zugang/SKILL.md`, die Oberfläche unter `VORLAGE/AI/TOOLING/zugang-ui`.
+## Das brauchst du
 
-## Schritt für Schritt
+- ☑️ Claude Code oder Codex ist installiert
+- ☑️ Ein Projektordner auf deinem Rechner
+- ☑️ Eine Textdatei mit deinen Zugangsdaten (siehe Schritt 2)
+- ☑️ Nur für die Zugang-UI: Python 3. Test im Terminal: `python3 --version`. Kommt eine Zahl wie `3.11`, passt alles.
 
-### 1. Zugangsdaten ablegen
-Lege eine `.md` in den Projektordner, zum Beispiel mit Host, SSH-User, Fingerprints, Datenbank und Shop-Login.
-Die Datei darf **nicht** committet werden. Der Skill und die Oberfläche tragen sie automatisch in die `.gitignore` ein.
+---
 
-### 2. Zugangsart klären
-Der Skill fragt zuerst, was eingerichtet werden soll: SSH/SFTP, Shop-Backend (JTL, Shopware, Shopify, WooCommerce), WordPress,
-Datenbank, Hosting-Panel oder API-Token. Für jede Art gibt es einen eigenen, möglichst passwortfreien Weg.
+## Teil 1: Der Skill `/zugang`
 
-### 3. Schlüssel eintragen
-Der Agent gibt dir eine Zeile aus, die mit `ssh-ed25519 …` beginnt. Trage sie beim Hoster ein:
+### Schritt 1: Skill installieren (einmalig)
 
-- **all-inkl/KAS:** *Tools → SSH-Schlüssel*, beim SSH-User, speichern.
-- **Andere Hoster:** in `~/.ssh/authorized_keys` des SSH-Users.
+Kopiere den Skill-Ordner in den Skill-Ordner von Claude Code. Im Terminal:
 
-Der öffentliche Schlüssel ist ungefährlich. Der private Schlüssel bleibt im Projektordner unter `.ssh/`.
+```bash
+mkdir -p ~/.claude/skills
+cp -R ".agents/skills/zugang" ~/.claude/skills/zugang
+```
 
-### 4. Zugang testen
-Der Agent prüft zuerst den **Host-Fingerprint** gegen deine Datei und meldet sich dann mit dem Schlüssel an
-(`BatchMode`, ohne Passwortabfrage). Danach liest er nur Logs und Konfiguration.
+Starte danach Claude Code neu (oder öffne einen neuen Chat). Jetzt kennt er den Befehl `/zugang`.
 
-### 5. Selbstständig arbeiten
-Damit der Agent nicht bei jedem Befehl fragt, kannst du in `.claude/settings.json` des Projekts erlauben, was er ohne Rückfrage darf:
+⚠️ Der Befehl kopiert nur den Skill. Er enthält keine Zugangsdaten.
+
+### Schritt 2: Zugangs-Datei anlegen
+
+Lege in deinem Projektordner eine Textdatei an, zum Beispiel `private/zugaenge.md`. Schreibe deine Daten hinein. Beispiel mit **erfundenen** Werten:
+
+```text
+## Server
+Adresse: beispiel-server.de
+Benutzer: mein-benutzer
+Passwort: mein-geheimes-passwort
+
+## Shop-Login
+Adresse: https://mein-shop.de/admin/
+Benutzer: admin
+Passwort: noch-ein-geheimes-passwort
+```
+
+Die Datei muss nicht schön sein. Wichtig ist: Zu jedem Zugang gehören Adresse, Benutzer und Passwort.
+
+### Schritt 3: Skill starten
+
+Schreibe in Claude Code:
+
+```text
+/zugang private/zugaenge.md
+```
+
+Bei Codex: `$zugang private/zugaenge.md`.
+
+### Was jetzt passiert
+
+1. Der Helfer schaut, ob in deinem Projekt schon Schutzregeln für Git und Uploads existieren.
+2. Er trägt deine Zugangs-Datei in die Liste „nicht hochladen“ ein (`.gitignore`). So landet sie nicht aus Versehen auf GitHub.
+3. Er legt die geschützte Datei `.env` an. Gibt es sie schon, lässt er sie unverändert und nutzt `.env.access.local`.
+4. Er sperrt die Dateien gegen versehentliches Ändern und Löschen.
+5. Er testet **einmal**, ob der Login klappt. Passwort-Varianten probiert er nicht durch.
+6. Du bekommst einen Bericht ohne Passwörter.
+
+### Was der Skill nicht macht
+
+- ❌ Er ändert keine Passwörter und keine Konten.
+- ❌ Er legt keine neuen Schlüssel oder Tokens an.
+- ❌ Er veröffentlicht nichts und deployt nichts.
+- ❌ Er liest keine Kundendaten und keine Server-Logs.
+- ❌ Er umgeht keine Zwei-Faktor-Abfrage und kein Captcha. Das machst du selbst.
+
+### Bericht lesen
+
+| Ergebnis | Bedeutung |
+|---|---|
+| ✅ erfolgreich | Der Login hat geklappt |
+| ❌ abgelehnt | Der Server hat „nein“ gesagt. Passwort oder Benutzer prüfen |
+| ⚠️ blockiert | Etwas steht im Weg (Zwei-Faktor, Captcha, Sperre). Du musst eingreifen |
+| ☑️ ungetestet | Der Helfer durfte oder konnte nicht testen |
+
+---
+
+## Teil 2: Die Zugang-UI (optional, für Server mit SSH)
+
+Manche Server erlauben den Login ohne Passwort, nur mit einem **Schlüssel**. Das ist sicherer. Die Zugang-UI erzeugt diesen Schlüssel für dich. Du klickst, statt Befehle zu tippen.
+
+### Starten
+
+Im Terminal, im Ordner des Repositorys:
+
+```bash
+./VORLAGE/AI/TOOLING/zugang-ui/start.command
+```
+
+Dein Browser öffnet sich. Die Seite läuft **nur auf deinem Rechner**. Kein Passwort verlässt ihn.
+
+### Die fünf Kästchen
+
+1. **Projekt:** Trage deinen Projektordner ein. Optional: den Pfad zu deiner Zugangs-Datei. „Aus .md übernehmen“ füllt viele Felder von selbst.
+2. **Zugang:** Prüfe die Felder (Server-Adresse, Benutzer, Port) und klicke auf „Einrichten & Schlüssel erzeugen“.
+3. **Schlüssel eintragen:** Du siehst eine lange Zeile, die mit `ssh-ed25519` beginnt. Das ist der **öffentliche** Schlüssel. Er ist ungefährlich. Klicke auf „Schlüssel kopieren“ und trage ihn bei deinem Hoster ein (siehe unten).
+4. **Verbindung testen:** Ein Klick prüft den Server und deinen Schlüssel. Grün = alles gut.
+5. **Selbstständig arbeiten:** Zeigt dir einen Kurznamen für den Server und die Regeln für Claude Code (siehe Teil 3).
+
+### Schlüssel beim Hoster eintragen
+
+- **all-inkl (KAS):** Im Kundenmenü auf *Tools → SSH-Schlüssel*. Beim richtigen SSH-Benutzer einfügen und speichern.
+- **Andere Hoster:** Suche im Hilfebereich nach „SSH-Schlüssel hinzufügen“.
+
+Der **private** Schlüssel bleibt im Ordner `.ssh/` deines Projekts. Gib ihn nie weiter und lade ihn nirgendwo hoch.
+
+---
+
+## Teil 3: Claude selbstständig arbeiten lassen (optional)
+
+Damit Claude Code nicht bei jedem Handgriff nachfragt, kannst du **bewusst** festlegen, was er ohne Nachfrage darf. Das machst du selbst, damit du die Kontrolle behältst.
+
+Lege im Projektordner die Datei `.claude/settings.json` an. Beispiel für einen Server mit dem Kurznamen `meinserver`:
 
 ```json
 {
   "permissions": {
     "allow": [
-      "Bash(ssh <alias>:*)",
-      "Bash(scp:*)",
-      "Bash(rsync:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)"
+      "Bash(ssh meinserver cat:*)",
+      "Bash(ssh meinserver ls:*)",
+      "Bash(ssh meinserver tail:*)",
+      "Bash(ssh meinserver grep:*)"
+    ],
+    "ask": [
+      "Bash(ssh meinserver rm:*)",
+      "Bash(ssh meinserver mysql:*)",
+      "Bash(ssh meinserver chmod:*)",
+      "Bash(ssh meinserver mv:*)"
     ]
   }
 }
 ```
 
-`<alias>` ist der SSH-Alias aus `~/.ssh/config`. Die Oberfläche zeigt dir den passenden Block und trägt den Alias auf Wunsch ein.
-Diese Regeln setzt du bewusst selbst – sie sind Sicherheitseinstellungen.
+- `allow` heißt: Das darf Claude ohne Nachfrage (nur ansehen und suchen).
+- `ask` heißt: Hier fragt Claude **immer vorher** nach (löschen, Datenbank, Rechte, verschieben).
 
-## Was bewusst bestätigungspflichtig bleibt
+---
 
-- **Löschen** von Dateien oder Tabellen und **Massenänderungen** am Live-System.
-- **Schreibzugriffe auf die Datenbank** – immer mit vorherigem Backup und im kleinsten Umfang.
-- **Passwörter eintippen** in Logins oder Terminal-Abfragen. Backend-Logins mit Passwort und 2FA machst du selbst.
+## Das bleibt immer deine Entscheidung
 
-## Sicherheitsregeln
+- 🚫 Etwas löschen (Dateien, Datenbank, Konten)
+- 🚫 Passwörter ändern
+- 🚫 Etwas live schalten oder veröffentlichen
+- 🚫 Zwei-Faktor-Code oder Captcha lösen
 
-- Keine Zugangsdaten in Chat, Logs, Commits, Issues oder öffentlichen Repos.
-- Quelldatei, `.env.access.local`, `.access.local.md` und `.ssh/` stehen in der `.gitignore`.
-- Bei jedem Fingerprint-Unterschied wird abgebrochen. Er ist kein Hinweis zum Wegklicken.
-- Wurden Passwörter im Klartext abgelegt oder geteilt: danach ändern.
-- Nach Projektende den öffentlichen Schlüssel beim Hoster wieder entfernen.
+Vor jedem Löschen sollte ein Backup liegen. Frage den Helfer: „Mach vorher ein Backup.“
 
-## Fehlerbehebung
+---
 
-| Meldung | Ursache | Lösung |
+## Kleines Wörterbuch
+
+| Wort | Bedeutung |
+|---|---|
+| **Server** | Der Computer im Internet, auf dem deine Webseite liegt |
+| **Hoster** | Die Firma, die den Server vermietet (zum Beispiel all-inkl, Hostinger) |
+| **SSH** | Eine sichere „Fernbedienung“ für den Server per Text |
+| **Schlüssel (öffentlich / privat)** | Wie ein Schloss und ein Schlüssel. Das Schloss (öffentlich) steht beim Hoster. Den Schlüssel (privat) behältst nur du |
+| **Fingerprint** | Der „Fingerabdruck“ des Servers. Damit prüfst du, dass du mit dem richtigen Server sprichst |
+| **`.env`** | Eine kleine Textdatei mit geheimen Werten. Sie bleibt nur auf deinem Rechner |
+| **`.gitignore`** | Eine Liste: „Diese Dateien niemals auf GitHub hochladen“ |
+| **Webroot** | Der Ordner auf dem Server, aus dem deine Webseite angezeigt wird |
+| **Zwei-Faktor (MFA)** | Zusätzlicher Code beim Login, zum Beispiel per App |
+| **Token** | Ein Passwort-Ersatz für Programme, oft mit eingeschränkten Rechten |
+
+---
+
+## Wenn etwas nicht klappt
+
+| Du siehst | Das bedeutet | Das hilft |
 |---|---|---|
-| `Permission denied (publickey)` | Schlüssel beim Hoster nicht eingetragen oder beim falschen User | Schlüssel beim SSH-User eintragen, ggf. einige Minuten warten |
-| Fingerprint stimmt nicht | falscher Host oder Man-in-the-Middle | Host prüfen, nicht fortfahren |
-| `Connection timed out` | Port oder Firewall | Port prüfen, Hoster fragen |
-| Der Agent fragt ständig nach | keine Berechtigungsregeln gesetzt | Abschnitt „Selbstständig arbeiten" |
-| Eine Löschung wird abgelehnt | Schutzmechanismus von Claude Code | feste, kleine Liste freigeben oder selbst ausführen |
+| `/zugang` wird nicht erkannt | Der Skill ist nicht installiert oder Claude wurde nicht neu gestartet | Schritt 1 wiederholen, Claude Code neu starten |
+| Login „abgelehnt“ | Benutzer oder Passwort stimmen nicht | Daten in der Zugangs-Datei prüfen |
+| „blockiert“ | Zwei-Faktor, Captcha oder Sperre | Login einmal selbst im Browser machen, dann nochmal versuchen |
+| `Permission denied (publickey)` | Der Schlüssel ist beim Hoster nicht (richtig) eingetragen | Beim richtigen SSH-Benutzer eintragen, ein paar Minuten warten |
+| Der Fingerabdruck stimmt nicht | Falscher Server oder jemand fängt die Verbindung ab | **Nicht weitermachen.** Adresse prüfen |
+| `python3: command not found` | Python fehlt | Python 3 installieren (python.org) |
+
+---
+
+## Aufräumen, wenn das Projekt fertig ist
+
+1. Öffentlichen Schlüssel beim Hoster wieder entfernen.
+2. Passwörter ändern, wenn sie je im Klartext in einer Datei oder einem Chat standen.
+3. Die Zugangs-Datei sicher aufbewahren (zum Beispiel im Passwortmanager) oder löschen. Vorher Backup.
+
+---
+
+## Was der Schutz kann und was nicht
+
+- `.gitignore` verhindert das normale Hochladen zu GitHub. Es entfernt aber keine Daten, die schon einmal hochgeladen wurden.
+- Dateisperren verhindern **versehentliches** Ändern. Sie sind kein Backup.
+- Die geschützten Dateien liegen im Klartext auf deinem Rechner. Wer deinen Rechner öffnen darf, kann sie lesen.
+- Manuelle Uploads, ZIP-Dateien und Cloud-Ordner beachten `.gitignore` nicht automatisch. Prüfe sie vorher.
+
+Der Skill ist unter der MIT-Lizenz frei nutzbar. Echte Zugangsdaten gehören nie in ein öffentliches Repository.
